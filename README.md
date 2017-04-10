@@ -96,7 +96,7 @@ supplémentaires: **BaseServlet** et **ContactServlet**.
 
 | Servlet        | Chemin d'accès | Action(s)              |
 | -------------- | -------------- | ---------------------- |
-| BaseServlet    | n/a            | n/a                    |
+| BaseServlet    | n/a            | GET                    |
 | ContactServlet | n/a            | GET, PUT, DELETE, POST |
 
 **BaseServlet** est utilisé comme une super-classe de tout les autres Servlets.
@@ -221,5 +221,54 @@ Nous constatons que c'est dans cette méthode que l'algorithme d'écriture des
 données dans le Datastore, est implanté.
 
 ## TÂCHE 3: COMPLÉTION DU CODE D'EXEMPLE AVEC DES TRANSACTIONS
+
+```java
+/**
+ * Add the entity to cache and also to the datastore
+ * @param entity
+ *          : entity to be persisted
+ */
+public static void persistEntity(Entity entity) {
+	logger.log(Level.INFO, "Saving entity");
+	Key key = entity.getKey();
+	Transaction txn = datastore.beginTransaction();
+	try {
+		datastore.put(entity);
+		txn.commit();
+	}
+	finally {
+		if (txn.isActive()) {
+			txn.rollback();
+		}
+		else {
+			addToCache(key, entity);
+		}
+	}
+}
+
+/**
+ * Delete the entity from persistent store represented by the key
+ * Also delete it from cache
+ * 
+ * @param key
+ *          : key to delete the entity from the persistent store
+ */
+public static void deleteEntity(Key key) {
+	logger.log(Level.INFO, "Deleting entity");
+	Transaction txn = datastore.beginTransaction();
+	try {
+		datastore.delete(key);
+		txn.commit();
+	}
+	finally {
+		if (txn.isActive()) {
+			txn.rollback();
+		}
+		else {
+			deleteFromCache(key);
+		}
+	}
+}
+```
 
 ## CONCLUSION
