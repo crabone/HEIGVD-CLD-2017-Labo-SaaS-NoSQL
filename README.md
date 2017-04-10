@@ -30,6 +30,11 @@ nous configurons déjà le serveur distant de GAE.
 
 ## TÂCHE 2: FAMILLIARISATION AVEC LE CODE D'EXEMPLE
 
+Dans ce chapitre, nous étudions le code d'exemple fourni.
+
+En inspectant le fichier `war/WEB-INF/lib/web.xml" nous constatons la présence
+de plusieurs points d'entrée.
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -75,6 +80,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 </web-app>
 ```
 
+Nous comptabilisons 4 Servlets. Ces Servlets sont destinés à être employés pour
+manipuler les données de l'application. Nous résumons les actions dans le
+tableau suivant:
+
 | Servlet         | Chemin d'accès | Action(s)              |
 | --------------- | -------------- | ---------------------- |
 | ProductServlet  | /product       | GET, PUT, DELETE, POST |
@@ -82,10 +91,25 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 | CustomerServlet | /customer      | GET, PUT, DELETE, POST |
 | OrderServlet    | /order         | GET, PUT, DELETE, POST |
 
+En regardant le code source, nous constatons la présence de deux Servlets
+supplémentaires: **BaseServlet** et **ContactServlet**.
+
 | Servlet        | Chemin d'accès | Action(s)              |
 | -------------- | -------------- | ---------------------- |
 | BaseServlet    | n/a            | n/a                    |
 | ContactServlet | n/a            | GET, PUT, DELETE, POST |
+
+**BaseServlet** est utilisé comme une super-classe de tout les autres Servlets.
+Seule la méthode **doGet()** est implantée. Il a pour fonction, de paramètrer
+les entêtes HTTP.
+
+**ContactServlet** est utilisé pour gérer le système de "contacts" de
+l'application. Aucun point d'entré (chemin d'accès) ne lui a été assigné.
+
+À présent, nous nous concentrons sur la manière dont a été implanté la gestion
+de la clientèle. Plus particulièrement, au moment où il y a des écritures dans
+le Datastore. Pour ce faire nous portons notre attentions sur la méthode
+**doPut()**.
 
 ```java
 /**
@@ -107,6 +131,10 @@ protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 			address, city, state, zip, email);
 }
 ```
+
+Nous remarquons qu'à l'épilogue de la fonction, la méthode
+**createOrUpdateCustomer()** de la classe **Customer** est appelée. Nous
+regardons comment elle a été implanté.
 
 ```java
 /**
@@ -170,6 +198,10 @@ public static void createOrUpdateCustomer(String nickName, String firstName,
 }
 ```
 
+Cette méthode vérifie l'existence d'un client et selon la réponse, l'ajoute ou
+le modifie. Une fois encore, une nouvelle méthode est appelée,
+**persistEntity()** de la classe **Util** pour mettre à jours l'entitée.
+
 ```java
 /**
  * Add the entity to cache and also to the datastore
@@ -184,6 +216,9 @@ public static void persistEntity(Entity entity) {
 	addToCache(key, entity);
 }
 ```
+
+Nous constatons que c'est dans cette méthode que l'algorithme d'écriture des
+données dans le Datastore, est implanté.
 
 ## TÂCHE 3: COMPLÉTION DU CODE D'EXEMPLE AVEC DES TRANSACTIONS
 
