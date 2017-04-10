@@ -22,7 +22,58 @@ cas d'accès concurrents.
 
 ## TÂCHE 1: TÉLÉCHARGEMENT ET IMPORTATION DU CODE D'EXEMPLE
 
+Dans ce chapitre, nous installons le [code d'exemple](http://heigvd-cld.s3-website-eu-west-1.amazonaws.com/labs/CLD Lab04 DBaaS.d/OrderManagement.zip)
+fourni. Ensuite, nous parametrons Eclipse pour acceuillir ce nouveau projet.
+
+L'importation du code source c'est déroulé comme prévu. Notons tout de même, que
+nous configurons déjà le serveur distant de GAE.
+
 ## TÂCHE 2: FAMILLIARISATION AVEC LE CODE D'EXEMPLE
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	<servlet>
+		<servlet-name>ProductServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.ProductServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProductServlet</servlet-name>
+		<url-pattern>/product</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ItemServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.ItemServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ItemServlet</servlet-name>
+		<url-pattern>/item</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>CustomerServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.CustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CustomerServlet</servlet-name>
+		<url-pattern>/customer</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>OrderServlet</servlet-name>
+		<servlet-class>com.google.appengine.codelab.OrderServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OrderServlet</servlet-name>
+		<url-pattern>/order</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>
+```
 
 ## TÂCHE 3: COMPLÉTION DU CODE D'EXEMPLE AVEC DES TRANSACTIONS
 
